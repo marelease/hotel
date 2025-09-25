@@ -17,4 +17,10 @@ public class ChambreService {
   public List<Chambre> getChambresLibres() {
     return repository.getChambres().stream().filter(Chambre::isLibre).toList();
   }
+
+    public List<Chambre> getChambresPrixInferieur(float v) {
+    return repository.getChambres().stream()
+            .filter(chambre -> chambre.isLibre() && chambre.getPrix() < v)
+            .toList();
+    }
 }

@@ -45,4 +45,18 @@ class HotelApplicationTests {
     assertEquals(chambresEsperees.size(), chambresLibres.size());
     assertTrue(chambresLibres.containsAll(chambresEsperees));
 	}
+
+    @Test
+    void testRecuperationChambresPrixInferieur() {
+        Chambre chambreA = new Chambre(true, 50.0f);
+        Chambre chambreB = new Chambre(true, 150.0f);
+        Chambre chambreC = new Chambre(true, 80.0f);
+        ChambreService chambreService = new ChambreService(new ChambreRepository(List.of(chambreA, chambreB, chambreC)));
+
+        List<Chambre> chambresPrixInferieur = chambreService.getChambresPrixInferieur(100.0f);
+
+        List<Chambre> chambresEsperees = List.of(chambreA, chambreC);
+        assertEquals(chambresEsperees.size(), chambresPrixInferieur.size());
+        assertTrue(chambresPrixInferieur.containsAll(chambresEsperees));
+    }
 }
