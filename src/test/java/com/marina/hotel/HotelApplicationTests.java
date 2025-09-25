@@ -1,6 +1,10 @@
 package com.marina.hotel;
 
+import com.marina.hotel.application.Chambre;
+import com.marina.hotel.application.ChambreService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
@@ -12,18 +16,21 @@ class HotelApplicationTests {
 
 	@Test
 	void testRecuperationChambres() {
+    ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake();
+    repository.ajouterChambre(0, true);
     ChambreService chambreService =
-        new ChambreService(new ChambreRepository(List.of(new Chambre())));
+        new ChambreService(repository);
     List<Chambre> toutesLesChambres = chambreService.getAllChambres();
     assertFalse(toutesLesChambres.isEmpty());
 	}
 
 	@Test
 	void testRecuperationChambres2() {
-    Chambre chambreA = new Chambre();
-    Chambre chambreB = new Chambre();
-    Chambre chambreC = new Chambre();
-    ChambreService chambreService = new ChambreService(new ChambreRepository(List.of(chambreA, chambreB, chambreC)));
+    ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake();
+    Chambre chambreA = repository.ajouterChambre(0, true);
+    Chambre chambreB = repository.ajouterChambre(1, true);
+    Chambre chambreC = repository.ajouterChambre(2, true);
+    ChambreService chambreService = new ChambreService(repository);
 
     List<Chambre> toutesLesChambres = chambreService.getAllChambres();
 
@@ -34,10 +41,11 @@ class HotelApplicationTests {
 
 	@Test
 	void testRecuperationChambresLibres() {
-    Chambre chambreA = new Chambre(false);
-    Chambre chambreB = new Chambre(true);
-    Chambre chambreC = new Chambre(false);
-    ChambreService chambreService = new ChambreService(new ChambreRepository(List.of(chambreA, chambreB, chambreC)));
+    ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake();
+    repository.ajouterChambre(0, false);
+    Chambre chambreB = repository.ajouterChambre(1, true);
+    repository.ajouterChambre(2, false);
+    ChambreService chambreService = new ChambreService(repository);
 
     List<Chambre> chambresLibres = chambreService.getChambresLibres();
 
@@ -46,17 +54,14 @@ class HotelApplicationTests {
     assertTrue(chambresLibres.containsAll(chambresEsperees));
 	}
 
-    @Test
-    void testRecuperationChambresPrixInferieur() {
-        Chambre chambreA = new Chambre(true, 50.0f);
-        Chambre chambreB = new Chambre(true, 150.0f);
-        Chambre chambreC = new Chambre(true, 80.0f);
-        ChambreService chambreService = new ChambreService(new ChambreRepository(List.of(chambreA, chambreB, chambreC)));
+	@ParameterizedTest(name = "Etage : {0} - prix attendu : {1}, prix RDC : {2}")
+  @CsvSource({"0,100,100", "1,107,100", "2,122,100", "3,133,100", "0,170,170", "1,181.9,170", "2,200,170", "3,200,170"})
+	void testPrixChambreRDC(int etage, double prixEspere, double prixRDC) {
+    ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake(prixRDC);
+    Chambre chambre = repository.ajouterChambre(etage, true);
 
-        List<Chambre> chambresPrixInferieur = chambreService.getChambresPrixInferieur(100.0f);
+    ChambreService chambreService = new ChambreService(repository);
 
-        List<Chambre> chambresEsperees = List.of(chambreA, chambreC);
-        assertEquals(chambresEsperees.size(), chambresPrixInferieur.size());
-        assertTrue(chambresPrixInferieur.containsAll(chambresEsperees));
-    }
+    assertEquals(prixEspere, chambreService.getPrix(chambre));
+	}
 }
