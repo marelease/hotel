@@ -1,15 +1,14 @@
-package com.marina.hotel;
+package com.marina.hotel.gateway;
 
-import com.marina.hotel.application.Chambre;
-import com.marina.hotel.application.port.server.ChambreRepository;
-
+import com.marina.hotel.facturation.business.entity.Chambre;
+import com.marina.hotel.facturation.gateway.ChambreRepository;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChambreRepositoryAdapterFake implements ChambreRepository {
 
   private final double prixRDC;
-  private List<Chambre> chambres;
+  private final List<Chambre> chambres;
 
   public ChambreRepositoryAdapterFake() {
     this(100);
@@ -22,7 +21,7 @@ public class ChambreRepositoryAdapterFake implements ChambreRepository {
 
   public Chambre ajouterChambre(int etage, boolean isLibre) {
     etage = Math.max(etage, 0);
-    Chambre chambre = new Chambre(isLibre, etage);
+    Chambre chambre = new Chambre(isLibre, etage, -1);
     this.chambres.add(chambre);
     return chambre;
   }

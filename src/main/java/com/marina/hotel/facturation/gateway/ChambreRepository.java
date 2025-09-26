@@ -1,7 +1,6 @@
-package com.marina.hotel.application.port.server;
+package com.marina.hotel.facturation.gateway;
 
-import com.marina.hotel.application.Chambre;
-
+import com.marina.hotel.facturation.business.entity.Chambre;
 import java.util.List;
 
 public interface ChambreRepository {

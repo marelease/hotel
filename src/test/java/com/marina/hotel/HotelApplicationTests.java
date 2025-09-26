@@ -1,16 +1,17 @@
 package com.marina.hotel;
 
-import com.marina.hotel.application.Chambre;
-import com.marina.hotel.application.ChambreService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.marina.hotel.facturation.business.entity.Chambre;
+import com.marina.hotel.facturation.business.usecase.interactor.ChambreService;
+import com.marina.hotel.facturation.presenter.impl.PrixChambreConsolePresenter;
+import com.marina.hotel.gateway.ChambreRepositoryAdapterFake;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class HotelApplicationTests {
 
@@ -62,6 +63,6 @@ class HotelApplicationTests {
 
     ChambreService chambreService = new ChambreService(repository);
 
-    assertEquals(prixEspere, chambreService.getPrix(chambre));
+    assertEquals(prixEspere, chambreService.getPrix(chambre, new PrixChambreConsolePresenter()));
 	}
 }
