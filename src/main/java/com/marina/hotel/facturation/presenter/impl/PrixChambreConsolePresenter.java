@@ -8,7 +8,7 @@ public class PrixChambreConsolePresenter implements PrixChambrePresenter {
 
   @Override
   public void presenter(double prixChambre) {
-    representation = "Prix Chambre: " + prixChambre + " €";
+    representation = "Prix ChambrePourReservation: " + prixChambre + " €";
   }
 
   public String getRepresentation() {

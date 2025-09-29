@@ -1,19 +1,19 @@
-package com.marina.hotel.serverside;
+package com.marina.hotel.serverside.facturation;
 
 import com.marina.hotel.facturation.business.entity.Chambre;
 import com.marina.hotel.facturation.gateway.ChambreRepository;
 import java.util.List;
 
-public class ChambreRepositoryAdapterStub implements ChambreRepository {
+public class ChambreFacturationRepositoryAdapterStub implements ChambreRepository {
 
   private final double prixRDC;
   private final List<Chambre> chambres;
 
-  public ChambreRepositoryAdapterStub() {
+  public ChambreFacturationRepositoryAdapterStub() {
     this(100);
   }
 
-  public ChambreRepositoryAdapterStub(double prixRDC) {
+  public ChambreFacturationRepositoryAdapterStub(double prixRDC) {
     this.chambres =
         List.of(
             new Chambre(true, 0, 10),

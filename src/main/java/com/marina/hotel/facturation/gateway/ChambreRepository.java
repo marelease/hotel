@@ -8,4 +8,5 @@ public interface ChambreRepository {
   List<Chambre> getChambres();
 
   double getPrixRDC();
+
 }

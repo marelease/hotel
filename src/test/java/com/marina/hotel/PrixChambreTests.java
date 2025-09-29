@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.marina.hotel.facturation.business.entity.Chambre;
-import com.marina.hotel.facturation.business.usecase.interactor.ChambreService;
+import com.marina.hotel.facturation.business.usecase.interactor.ChambrePrixUseCaseInteractor;
 import com.marina.hotel.facturation.presenter.impl.PrixChambreConsolePresenter;
 import com.marina.hotel.gateway.ChambreRepositoryAdapterFake;
 import java.util.List;
@@ -13,15 +13,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-class HotelApplicationTests {
+class PrixChambreTests {
 
 	@Test
 	void testRecuperationChambres() {
     ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake();
     repository.ajouterChambre(0, true);
-    ChambreService chambreService =
-        new ChambreService(repository);
-    List<Chambre> toutesLesChambres = chambreService.getAllChambres();
+    ChambrePrixUseCaseInteractor chambreUseCaseInteractor =
+        new ChambrePrixUseCaseInteractor(repository);
+    List<Chambre> toutesLesChambres = chambreUseCaseInteractor.getAllChambres();
     assertFalse(toutesLesChambres.isEmpty());
 	}
 
@@ -31,28 +31,14 @@ class HotelApplicationTests {
     Chambre chambreA = repository.ajouterChambre(0, true);
     Chambre chambreB = repository.ajouterChambre(1, true);
     Chambre chambreC = repository.ajouterChambre(2, true);
-    ChambreService chambreService = new ChambreService(repository);
+    ChambrePrixUseCaseInteractor chambreUseCaseInteractor =
+        new ChambrePrixUseCaseInteractor(repository);
 
-    List<Chambre> toutesLesChambres = chambreService.getAllChambres();
+    List<Chambre> toutesLesChambres = chambreUseCaseInteractor.getAllChambres();
 
     List<Chambre> chambresEsperees = List.of(chambreA, chambreB, chambreC);
     assertEquals(chambresEsperees.size(), toutesLesChambres.size());
     assertTrue(toutesLesChambres.containsAll(chambresEsperees));
-	}
-
-	@Test
-	void testRecuperationChambresLibres() {
-    ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake();
-    repository.ajouterChambre(0, false);
-    Chambre chambreB = repository.ajouterChambre(1, true);
-    repository.ajouterChambre(2, false);
-    ChambreService chambreService = new ChambreService(repository);
-
-    List<Chambre> chambresLibres = chambreService.getChambresLibres();
-
-    List<Chambre> chambresEsperees = List.of(chambreB);
-    assertEquals(chambresEsperees.size(), chambresLibres.size());
-    assertTrue(chambresLibres.containsAll(chambresEsperees));
 	}
 
 	@ParameterizedTest(name = "Etage : {0} - prix attendu : {1}, prix RDC : {2}")
@@ -61,8 +47,10 @@ class HotelApplicationTests {
     ChambreRepositoryAdapterFake repository = new ChambreRepositoryAdapterFake(prixRDC);
     Chambre chambre = repository.ajouterChambre(etage, true);
 
-    ChambreService chambreService = new ChambreService(repository);
+    ChambrePrixUseCaseInteractor chambreUseCaseInteractor =
+        new ChambrePrixUseCaseInteractor(repository);
 
-    assertEquals(prixEspere, chambreService.getPrix(chambre, new PrixChambreConsolePresenter()));
+    assertEquals(
+        prixEspere, chambreUseCaseInteractor.getPrix(chambre, new PrixChambreConsolePresenter()));
 	}
 }

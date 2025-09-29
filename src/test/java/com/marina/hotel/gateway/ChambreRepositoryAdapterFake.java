@@ -26,10 +26,6 @@ public class ChambreRepositoryAdapterFake implements ChambreRepository {
     return chambre;
   }
 
-  public void clear() {
-    this.chambres.clear();
-  }
-
   @Override
   public List<Chambre> getChambres() {
     return List.copyOf(chambres);
